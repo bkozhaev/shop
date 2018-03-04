@@ -12,6 +12,7 @@ class Basket
     if user_choice.between?(1, size)
       products[user_choice - 1].amount -= 1
       @basket << products[user_choice - 1]
+      puts "Вы выбрали: #{products[user_choice - 1]}"
     else
       puts "Вводите цифру в соответствии со списком предложенной продукции"
     end
