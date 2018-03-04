@@ -48,6 +48,11 @@ class ProductCollection
   end
 
   def check_amount
-
+    @products.each do |product|
+      if product.amount <= 0
+        puts "Вы приобрели последний экз. #{product.to_ss}"
+        @products.delete(product)
+      end
+    end
   end
 end
