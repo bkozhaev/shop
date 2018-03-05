@@ -5,40 +5,42 @@ require_relative 'lib/disk'
 require_relative 'lib/product_collection'
 require_relative 'lib/basket'
 
-product = ProductCollection.from_dir(File.dirname(__FILE__) + '/data')
-user_choice = nil
+collection = ProductCollection.from_dir(File.dirname(__FILE__) + '/data')
 basket = Basket.new
-# choices_amount = (1..product.to_a.length).to_a
-count = 0
-user_choices = []
-puts
 
-until user_choice == '0'
+
+loop do
   puts "Что хотите купить:"
   puts
 
-  product.sort!(by: :title, order: :asc)
+  collection.sort!(by: :title, order: :asc)
 
-  product.to_a.each do |product|
-    puts "#{count += 1}. #{product}"
+  collection.to_a.each_with_index do |product, index|
+    puts "#{index + 1}. #{product}"
   end
   puts "0. Выход"
 
-  break if product.to_a.length <= 0
+  user_choice = gets.to_i
 
-  user_choice = gets.chomp
+  break if user_choice == 0
+  next puts "Выберите цифру из списка" if user_choice > collection.to_a.length
 
-  basket.check_choice(product.to_a, user_choice.to_i)
-  product.check_amount
+  product_index = user_choice - 1
+  product = collection.to_a[product_index]
 
-  count = 0
+  basket.buy(collection.to_a, product)
+  if basket.check_collection?(product)
+    puts "Вы купили последний экземпляр #{product.to_ss}"
+  else
+    puts "Вы купили #{product}"
+  end
 end
 
 puts "Вы купили:"
 puts
-basket.set_total
+basket.content.each { |product| puts product.to_ss }
 puts
-puts "С Вас - #{basket.money_amount} руб. Спасибо за покупки!"
+puts "С Вас - #{basket.set_total} руб. Спасибо за покупки!"
 
 
 

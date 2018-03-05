@@ -1,28 +1,22 @@
 class Basket
-  attr_reader :basket, :money_amount
+  attr_reader :content
 
-  def initialize(products)
-    @basket = []
-    @money_amount = 0
-    @products = products
+  def initialize
+    @content = []
   end
 
-  def check_number?(user_choice)
-    user_choice.between?(1, @products.length)
+  def check_collection?(product)
+    product.amount == 0
   end
 
-
-  def check_choice(products, user_choice)
-    if check_number?(user_choice)
-      products[user_choice - 1].amount -= 1
-      @basket << products[user_choice - 1]
-    end
+  def buy(collection, product)
+    return if product.amount == 0
+    product.amount -= 1
+    collection.delete(product) if check_collection?(product)
+    @content << product
   end
 
   def set_total
-    @basket.each do |product|
-      puts product
-      @money_amount += product.price
-    end
+    @content.inject(0) { |sum, product| sum + product.price }
   end
 end
